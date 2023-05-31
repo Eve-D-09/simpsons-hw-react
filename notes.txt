@@ -1,0 +1,108 @@
+# notes - plan ---------------------------------------------------
+a. create new components
+b. create events listeners
+c. create functions
+d. props drilling
+
+-----------------------------------------------------------------
+1. create  Control component which holds: 
+           a.search input 
+           b. sorts characters from a-z and inverse
+           
+
+import React, { component } from 'react';
+
+class Control extends Component {
+    render() {
+        const { onSearchInput, onSortCharacters, onReset } = this.props;
+        return (
+            <>
+            <input onInput={onSearchInput} type="text" />
+            <select onChange={onSortCharacters}>
+                  <option value=""></option>
+                  <option value="az">A-Z</option>
+                  <option value="za">Z-A</option>
+            </select>
+            <button onClick={() => onReset(?)}>Reset search</button>
+            </>
+        )
+    }
+}
+
+export default Control;
+
+----------------------------------------------------------------------
+2. create onReset component with button 
+
+import React, { Component } from "react";
+
+class Reset extends Component {
+  // state = {  }
+  render() {
+
+    const { onReset } = this.props;
+    return (
+      <div>
+        <button onClick={() => onReset(?)}>Reset search</button>
+      </div>
+    );
+  }
+}
+
+export default Reset;
+
+? - what to pass inside onReset  -  to reset search results ?
+
+-----------------------------------------------------------------------
+Where insert Control and Reset components -  into simpsons.jsx? 
+<Control /> <Reset /> 
+
+-----------------------------------------------------------------------
+3. create 3 event listeners inside app.jsx
+
+onSearchInput = (e) => {
+    this.setState({ searchInput: e.target.value });
+}
+
+onSortCharacters = (e) => {
+    this.setState({ sortCharacters: e.target.value });
+}
+
+onReset = (search results ? ) => {
+    make a copy of simpsons? 
+    const simpsons = [...this.state.simpsons];
+    return simpsons; (original state?)
+}
+
+----------------------------------------------------------------------------
+4. create filtered characters list function 
+
+getFilteredList = () => {
+    const { simpsons, searchInput, sortCharacters } = this.state;
+
+    let filteredCharacters = [...simpsons.character];
+
+    if (searchInput) {
+        filteredCharacters = filteredCharacters.filter((char) => {
+            if (
+                simpsons.character.includes(searchInput)
+            ) {
+                return true;
+            }
+        } );
+    }
+
+    if (sortCharacters === "az") {
+        filteredCharacters.sort((a, b) => {
+            if (a.character > b.character) return 1;
+            if (a.character < b.character) return -1;
+        })
+        else if ( sortCharacters === "za" ) {
+            filteredCharacters.sort((a, b) => {
+            if (a.character > b.character) return -1;
+            if (a.character < b.character) return 1;
+        })
+        }
+    }
+    return filteredCharacters;
+}
